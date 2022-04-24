@@ -258,7 +258,7 @@ def single_run(
         max_epochs=n_epochs,
         callbacks=callbacks,
         gpus=gpus,
-        distributed_backend=config["training"].get("backend"),
+        strategy=config["training"].get("backend"),
         accumulate_grad_batches=config["training"]["accumulate_batches"],
         logger=logger,
         resume_from_checkpoint=checkpoint_resume,
