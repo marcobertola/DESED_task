@@ -374,10 +374,10 @@ class SEDTask4_2021(pl.LightningModule):
 
             # accumulate f1 score for weak labels
             self.get_weak_student_f1_seg_macro(
-                weak_preds_student[mask_weak], labels_weak
+                weak_preds_student[mask_weak], labels_weak.long()
             )
             self.get_weak_teacher_f1_seg_macro(
-                weak_preds_teacher[mask_weak], labels_weak
+                weak_preds_teacher[mask_weak], labels_weak.long()
             )
 
         if torch.any(mask_synth):

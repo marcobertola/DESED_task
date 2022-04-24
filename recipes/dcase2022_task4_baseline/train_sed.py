@@ -22,6 +22,9 @@ from local.sed_trainer import SEDTask4_2021
 from local.resample_folder import resample_folder
 from local.utils import generate_tsv_wav_durations
 
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 
 def resample_data_generate_durations(config_data, test_only=False, evaluation=False):
     if not test_only:
