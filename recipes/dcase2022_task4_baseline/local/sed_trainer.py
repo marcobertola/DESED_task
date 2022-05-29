@@ -9,6 +9,7 @@ import torch
 from torchaudio.transforms import AmplitudeToDB, MelSpectrogram
 
 from desed_task.data_augm import mixup
+from desed_task.data_augm import add_noise
 from desed_task.utils.scaler import TorchScaler
 import numpy as np
 import torchmetrics
@@ -236,6 +237,8 @@ class SEDTask4_2021(pl.LightningModule):
         audio, labels, padded_indxs = batch
         indx_synth, indx_weak, indx_unlabelled = self.hparams["training"]["batch_size"]
         features = self.mel_spec(audio)
+
+        features = add_noise(features)
 
         batch_num = features.shape[0]
         # deriving masks for each dataset
