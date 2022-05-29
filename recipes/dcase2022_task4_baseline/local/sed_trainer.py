@@ -9,6 +9,7 @@ import torch
 from torchaudio.transforms import AmplitudeToDB, MelSpectrogram
 
 from desed_task.data_augm import mixup
+from desed_task.reverb import reverb
 from desed_task.utils.scaler import TorchScaler
 import numpy as np
 import torchmetrics
@@ -269,7 +270,12 @@ class SEDTask4(pl.LightningModule):
         # deriving weak labels
         labels_weak = (torch.sum(labels[weak_mask], -1) > 0).float()
 
+        # Add reverb
+        reverb(audio)
+
+        # Add mixup
         mixup_type = self.hparams["training"].get("mixup")
+        mixup_type = None
         if mixup_type is not None and 0.5 > random.random():
             features[weak_mask], labels_weak = mixup(
                 features[weak_mask], labels_weak, mixup_label_type=mixup_type
