@@ -271,7 +271,7 @@ class SEDTask4(pl.LightningModule):
         labels_weak = (torch.sum(labels[weak_mask], -1) > 0).float()
 
         # Add reverb
-        reverb(audio)
+        #reverb(audio)
 
         # Add mixup
         mixup_type = self.hparams["training"].get("mixup")
