@@ -9,6 +9,8 @@ import torch
 from torchaudio.transforms import AmplitudeToDB, MelSpectrogram
 
 from desed_task.data_augm import mixup
+from desed_task.data_augm import add_noise
+from desed_task.data_augm import frame_shift
 from desed_task.reverb import reverb
 from desed_task.utils.scaler import TorchScaler
 import numpy as np
@@ -246,6 +248,10 @@ class SEDTask4(pl.LightningModule):
         return model(self.scaler(self.take_log(mel_feats)))
 
     def training_step(self, batch, batch_indx):
+        do_add_reverb = True
+        do_add_mixup = False
+        do_add_noise = False
+        do_add_frame_shift = False
         """ Apply the training for one batch (a step). Used during trainer.fit
 
         Args:
@@ -257,8 +263,20 @@ class SEDTask4(pl.LightningModule):
         """
 
         audio, labels, padded_indxs = batch
+        # Add reverb
+        if do_add_reverb is True and 0.5 > random.random():
+            audio = reverb(audio)
+
         indx_synth, indx_weak, indx_unlabelled = self.hparams["training"]["batch_size"]
         features = self.mel_spec(audio)
+
+        # Add noise
+        if do_add_noise is True and 0.5 > random.random():
+            features = add_noise(features)
+
+        # Add frame shift
+        if do_add_frame_shift is True and 0.5 > random.random():
+            features, labels = frame_shift(features, labels)
 
         batch_num = features.shape[0]
         # deriving masks for each dataset
@@ -270,15 +288,9 @@ class SEDTask4(pl.LightningModule):
         # deriving weak labels
         labels_weak = (torch.sum(labels[weak_mask], -1) > 0).float()
 
-        # Add reverb
-        do_reverb = True
-        if do_reverb is True and 0.5 > random.random():
-            reverb(audio)
-
         # Add mixup
         mixup_type = self.hparams["training"].get("mixup")
-        mixup_type = None
-        if mixup_type is not None and 0.5 > random.random():
+        if do_add_mixup and mixup_type is not None and 0.5 > random.random():
             features[weak_mask], labels_weak = mixup(
                 features[weak_mask], labels_weak, mixup_label_type=mixup_type
             )
