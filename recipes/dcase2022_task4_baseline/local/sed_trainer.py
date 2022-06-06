@@ -11,6 +11,7 @@ from torchaudio.transforms import AmplitudeToDB, MelSpectrogram
 from desed_task.data_augm import mixup
 from desed_task.data_augm import add_noise
 from desed_task.data_augm import frame_shift
+from desed_task.data_augm import spec_augment
 from desed_task.reverb import reverb
 from desed_task.utils.scaler import TorchScaler
 import numpy as np
@@ -248,10 +249,11 @@ class SEDTask4(pl.LightningModule):
         return model(self.scaler(self.take_log(mel_feats)))
 
     def training_step(self, batch, batch_indx):
-        do_add_reverb = True
+        do_add_reverb = False
         do_add_mixup = False
         do_add_noise = False
         do_add_frame_shift = False
+        do_add_spec_augment = True
         """ Apply the training for one batch (a step). Used during trainer.fit
 
         Args:
@@ -277,6 +279,9 @@ class SEDTask4(pl.LightningModule):
         # Add frame shift
         if do_add_frame_shift is True and 0.5 > random.random():
             features, labels = frame_shift(features, labels)
+
+        if do_add_spec_augment is True and 0.5 > random.random():
+            features = add_spec_augment(features)
 
         batch_num = features.shape[0]
         # deriving masks for each dataset

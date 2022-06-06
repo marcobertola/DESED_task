@@ -1,7 +1,21 @@
 import numpy as np
 import torch
 import random
+import torchaudio.transforms as T
 
+
+def spec_augment(mels):
+    # stretch = T.TimeStretch()
+    # rate = 1.2
+    # features_ = stretch(features, rate)
+
+    masking = T.TimeMasking(time_mask_param=80)
+    mels = masking(mels)
+
+    masking = T.FrequencyMasking(freq_mask_param=80)
+    mels = masking(mels)
+
+    return mels
 
 def frame_shift(mels, labels, net_pooling=4):
     bsz, n_bands, frames = mels.shape
