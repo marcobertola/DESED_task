@@ -45,6 +45,7 @@ def reverb(audio):
     rir = rir_raw[:, int(sample_rate * 1.01):int(sample_rate * 1.3)]
     rir = rir / torch.norm(rir, p=2)
     rir = torch.flip(rir, [1])
+    rir = rir.cuda()
 
     tensors = []
     for i, _tensor in enumerate(audio):
