@@ -4,15 +4,15 @@ import random
 import torchaudio.transforms as T
 
 
-def spec_augment(mels):
+def spec_augment(mels, param):
     # stretch = T.TimeStretch()
     # rate = 1.2
     # features_ = stretch(features, rate)
 
-    masking = T.TimeMasking(time_mask_param=80)
+    masking = T.TimeMasking(time_mask_param=param)
     mels = masking(mels)
 
-    masking = T.FrequencyMasking(freq_mask_param=80)
+    masking = T.FrequencyMasking(freq_mask_param=param)
     mels = masking(mels)
 
     return mels

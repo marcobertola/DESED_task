@@ -281,7 +281,7 @@ class SEDTask4(pl.LightningModule):
             features, labels = frame_shift(features, labels)
 
         if do_add_spec_augment is True and 0.5 > random.random():
-            features = spec_augment(features)
+            features = spec_augment(features, 60)
 
         batch_num = features.shape[0]
         # deriving masks for each dataset
