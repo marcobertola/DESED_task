@@ -4,10 +4,34 @@ import random
 import torchaudio.transforms as T
 
 
+def spec_augment_v2(mels, param):
+    bsz, n_bands, frames = mels.shape
+    tensors = []
+
+    for bindx in range(bsz):
+        new_mels = mels[bindx]
+        new_mels = torch.unsqueeze(new_mels, dim=0)
+
+        #stretch = T.TimeStretch()
+        #rate = 1.2
+        #new_mels = stretch(new_mels, rate)
+
+        masking = T.TimeMasking(time_mask_param=param)
+        new_mels = masking(new_mels)
+
+        masking = T.FrequencyMasking(freq_mask_param=param)
+        new_mels = masking(new_mels)
+        tensors.append(torch.squeeze(new_mels, dim=0))
+
+    result = torch.stack(tensors)
+    return result
+
+
 def spec_augment(mels, param):
-    # stretch = T.TimeStretch()
-    # rate = 1.2
-    # features_ = stretch(features, rate)
+
+    #stretch = T.TimeStretch()
+    #rate = 1.2
+    #mels = stretch(mels, rate)
 
     masking = T.TimeMasking(time_mask_param=param)
     mels = masking(mels)
@@ -16,6 +40,7 @@ def spec_augment(mels, param):
     mels = masking(mels)
 
     return mels
+
 
 def frame_shift(mels, labels, net_pooling=4):
     bsz, n_bands, frames = mels.shape
