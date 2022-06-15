@@ -265,6 +265,7 @@ class SEDTask4(pl.LightningModule):
            torch.Tensor, the loss to take into account.
         """
 
+        random_value = random.random()
         audio, labels, padded_indxs = batch
         # Add reverb
         if do_add_reverb is True and 0.5 > random.random():
@@ -281,7 +282,7 @@ class SEDTask4(pl.LightningModule):
         if do_add_frame_shift is True and 0.5 > random.random():
             features, labels = frame_shift(features, labels)
 
-        if do_add_spec_augment is True and 0.5 > random.random():
+        if do_add_spec_augment is True and random_value > 0.666:
             features = spec_augment_v2(features, 120)
 
         batch_num = features.shape[0]
@@ -296,7 +297,7 @@ class SEDTask4(pl.LightningModule):
 
         # Add mixup
         mixup_type = self.hparams["training"].get("mixup")
-        if do_add_mixup and mixup_type is not None and 0.5 > random.random():
+        if do_add_mixup and mixup_type is not None and random_value < 0.333:
             features[weak_mask], labels_weak = mixup(
                 features[weak_mask], labels_weak, mixup_label_type=mixup_type
             )
