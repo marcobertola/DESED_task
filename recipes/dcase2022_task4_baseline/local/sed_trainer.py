@@ -251,7 +251,7 @@ class SEDTask4(pl.LightningModule):
 
     def training_step(self, batch, batch_indx):
         do_add_reverb = False
-        do_add_mixup = False
+        do_add_mixup = True
         do_add_noise = False
         do_add_frame_shift = False
         do_add_spec_augment = True
@@ -282,7 +282,7 @@ class SEDTask4(pl.LightningModule):
             features, labels = frame_shift(features, labels)
 
         if do_add_spec_augment is True and 0.5 > random.random():
-            features = spec_augment_v2(features, 80 )
+            features = spec_augment_v2(features, 120)
 
         batch_num = features.shape[0]
         # deriving masks for each dataset
