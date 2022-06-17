@@ -251,10 +251,10 @@ class SEDTask4(pl.LightningModule):
 
     def training_step(self, batch, batch_indx):
         do_add_reverb = False
-        do_add_mixup = False
+        do_add_mixup = True
         do_add_noise = False
         do_add_frame_shift = False
-        do_add_spec_augment = True
+        do_add_spec_augment = False
         """ Apply the training for one batch (a step). Used during trainer.fit
 
         Args:

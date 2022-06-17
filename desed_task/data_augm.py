@@ -69,6 +69,7 @@ def mixup(data, target=None, alpha=0.2, beta=0.2, mixup_label_type="soft"):
     with torch.no_grad():
         batch_size = data.size(0)
         c = np.random.beta(alpha, beta)
+        c = 0.5
 
         perm = torch.randperm(batch_size)
 
