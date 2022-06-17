@@ -43,6 +43,8 @@ def resample(audio, orig_fs, target_fs):
 
 
 def resample_folder(in_dir, out_dir, target_fs=16000, regex="*.wav"):
+    print(f"IN {in_dir}")
+    print(f"OUT {out_dir}")
     """
     Resamples the audio files contained in the in_dir folder and saves them in out_dir folder
 
