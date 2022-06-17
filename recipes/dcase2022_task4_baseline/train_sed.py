@@ -103,6 +103,7 @@ def single_run(
             return_filename=True
         )
 
+    print(devtest_dataset)
     devtest_dataset[0]
     test_dataset = devtest_dataset
 
