@@ -35,7 +35,7 @@ def resample_data_generate_durations(config_data, test_only=False, evaluation=Fa
             "test_folder",
         ]
     elif test_only:
-        dsets = ["test_folder"]
+        dsets = ["eval_folder"]
     else:
         dsets = ["eval_folder"]
 
